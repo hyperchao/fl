@@ -33,3 +33,37 @@ func (s Set[T]) Equal(other Set[T]) bool {
 func (s Set[T]) Size() int {
 	return len(s)
 }
+
+func (s Set[T]) IsSubSet(other Set[T]) bool {
+	for v := range s {
+		if !other.Contains(v) {
+			return false
+		}
+	}
+	return true
+}
+
+func (s Set[T]) IsSuperSet(other Set[T]) bool {
+	return other.IsSubSet(s)
+}
+
+func (s Set[T]) Union(other Set[T]) Set[T] {
+	result := New[T]()
+	for v := range s {
+		result.Add(v)
+	}
+	for v := range other {
+		result.Add(v)
+	}
+	return result
+}
+
+func (s Set[T]) Intersect(other Set[T]) Set[T] {
+	result := New[T]()
+	for v := range s {
+		if other.Contains(v) {
+			result.Add(v)
+		}
+	}
+	return result
+}
