@@ -15,7 +15,7 @@ func (s Set[T]) Remove(v T) {
 }
 
 func (s Set[T]) Contains(v T) bool {
-	return s[v] != struct{}{}
+	return s[v] == struct{}{}
 }
 
 func (s Set[T]) Equal(other Set[T]) bool {
