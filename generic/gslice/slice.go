@@ -2,6 +2,7 @@ package gslice
 
 import (
 	"github.com/hyperchao/fl/generic/giter"
+	"github.com/hyperchao/fl/generic/gpair"
 	"github.com/hyperchao/fl/generic/optional"
 	"iter"
 )
@@ -91,4 +92,25 @@ func FilterMap[T, R any](slice []T, f func(T) bool, g func(T) R) []R {
 
 func MapFilter[T, R any](slice []T, f func(T) R, g func(R) bool) []R {
 	return FromIter(giter.Filter(giter.Map(Iter(slice), f), g))
+}
+
+func ToMap[T, V any, K comparable](slice []T, key func(T) K, value func(T) V) map[K]V {
+	result := make(map[K]V, len(slice))
+	for _, v := range slice {
+		result[key(v)] = value(v)
+	}
+	return result
+}
+
+func Zip[T, R any](a []T, b []R) []gpair.Pair[T, R] {
+	n := min(len(a), len(b))
+	result := make([]gpair.Pair[T, R], 0, n)
+	for i := 0; i < n; i++ {
+		result = append(result, gpair.Of(a[i], b[i]))
+	}
+	return result
+}
+
+func ZipMap[K comparable, V any](a []K, b []V) map[K]V {
+	return ToMap(Zip(a, b), gpair.Left, gpair.Right)
 }
